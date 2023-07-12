@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { CssBaseline } from "@material-ui/core";
+import axios from 'axios';
 
 import "./App.css";
 
@@ -31,9 +32,16 @@ function App() {
   const [selectedPokemon, selectedPokemonSet] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("/starting-react/pokemon.json")
-      .then((resp) => resp.json())
-      .then((data) => pokemonSet(data));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/pokemon');
+        pokemonSet(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (!pokemon) {
